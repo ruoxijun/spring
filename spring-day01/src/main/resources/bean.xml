@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- bean文件的文件头 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- bean：对象配置标签
+         id：唯一标识符
+         class：对象的全限定名 -->
+    <bean id="hi1" class="io.github.ruoxijun.pojo.Hi" scope="singleton"/>
+    <bean id="hi2" class="io.github.ruoxijun.pojo.Hi">
+        <!-- property：属性赋值，该成员变量必须有set方法
+             name：该对象的某一属性名（成员变量名）
+             value：为该属性赋值（只能是基本类型或String值） -->
+        <property name="str" value="World"/>
+    </bean>
+
+    <!-- name：当前对象别名，且可使用“,”逗号“;”分号或者空格三种分隔符取多个别名 -->
+    <bean id="hello" class="io.github.ruoxijun.pojo.Hello" name="Hello">
+        <property name="str" value="property"/>
+        <!-- ref：为成员变量赋值一个对象，值为bean的id或别名 -->
+        <property name="hi" ref="hi2"/>
+
+        <!-- 通过构造方法构造对象，下标锁定 -->
+<!--        <constructor-arg index="0" value="constructor-arg-index"/>-->
+<!--        <constructor-arg index="1" value="h2"/>-->
+
+        <!-- 通过构造方法构造对象，类型锁定 -->
+<!--        <constructor-arg type="java.lang.String" value="constructor-arg-type"/>-->
+<!--        <constructor-arg type="io.github.ruoxijun.pojo.Hi" value="h2"/>-->
+
+        <!-- 通过构造方法构造对象，参数名锁定 -->
+<!--        <constructor-arg name="str" value="constructor-arg-name"/>-->
+<!--        <constructor-arg name="hi" ref="hi2"/>-->
+    </bean>
+
+    <!-- 给bean（对象）取别名
+         name：需要取别名bean的id
+         alias：别名 -->
+    <alias name="hello" alias="helloAlias"/>
+
+    <!-- 导入其他的beans.xml文件
+         当有多个beans.xml文件时，通过在一个beans.xml中
+         使用import导入合并其它需要的beans.xml。
+         使用时使用这个总的beans.xml就可以了。
+         当bean的id或者别名重名时后导入的会覆盖先导入的。 -->
+<!--    <import resource="bean.xml"/>-->
+<!--    <import resource="其它.xml"/>-->
+
+</beans>

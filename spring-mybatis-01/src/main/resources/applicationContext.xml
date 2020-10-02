@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- bean文件的文件头标签与申明 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 导入对mybatis的配置 -->
+    <import resource="spring-dao.xml"/>
+
+    <bean id="userMapper" class="ruoxijun.mapper.UserMapperImpl">
+        <!-- 两参数注入择一即可，也可同时注入 -->
+<!--        <property name="sqlSessionTemplate" ref="sqlSession"/>-->
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+</beans>

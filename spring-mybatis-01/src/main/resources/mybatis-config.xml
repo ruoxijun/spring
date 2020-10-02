@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- mybatis 主配置文件：头部的声明，它用来验证 XML 文档的正确性 -->
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- 核心配置文件(存放mybatis与数据库的各种配置) -->
+<configuration>
+    <settings>
+        <!-- logImpl：日志实现
+            STDOUT_LOGGING：控制台日志 -->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+    <typeAliases>
+        <typeAlias type="ruoxijun.pojo.User" alias="user"/>
+    </typeAliases>
+
+    <!-- 管理Mapper接口对应的Mapper.xml -->
+<!--    <mappers>-->
+<!--        &lt;!&ndash; 每个Mapper.xml文件都需要在此注册 &ndash;&gt;-->
+<!--        <mapper class="ruoxijun.mapper.UserMapper"/>-->
+<!--    </mappers>-->
+</configuration>

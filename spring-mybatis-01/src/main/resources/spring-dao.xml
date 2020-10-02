@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       https://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 1. datasource：使用spring的数据源替换mybatis的配置，这里使用spring的jdbc -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/test?useSSL=false&amp;
+                useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=GMT%2B8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="991314"/>
+    </bean>
+
+    <!-- 2. 在MyBatis-Spring中，可使用SqlSessionFactoryBean来创建SqlSessionFactory。
+         将配置的数据源DriverManagerDataSource对象赋值给SqlSessionFactoryBean的dataSource -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <!-- 绑定mybatis配置文件 -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <!-- 它的属性还能替换mybatis中的许多配置，如下为代替mybatis注册Mapper.xml文件 -->
+        <property name="mapperLocations" value="classpath:ruoxijun/mapper/*.xml"/>
+    </bean>
+
+    <!-- 3.在MyBatis-Spring中SqlSessionTemplate就是sqlSession，
+         需要利用构造函数传入我们配置好的sqlSessionFactory -->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+    <!-- =========配置事务========= -->
+    <!-- 1.要开启Spring的事务处理功能，在Spring配置文件中创建DataSourceTransactionManager对象 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!-- 设置数据源，构造方法和set注入二选一即可 -->
+        <constructor-arg ref="dataSource" />
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 2.结合aop实现事务的置入 -->
+    <!-- 2.1 配置事务通知(配置事务的类，由spring提供) -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <!-- 指定给SQL的那些方法提供事务 -->
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+    <!-- 2.2 配置事务切入 -->
+    <aop:config>
+        <aop:pointcut id="txPointCut" expression="execution(* ruoxijun.mapper.UserMapperImpl.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
+    </aop:config>
+</beans>
